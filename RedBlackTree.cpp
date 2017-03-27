@@ -15,16 +15,17 @@ RedBlackTree::~RedBlackTree(){
 }
 
 bool RedBlackTree::isEmpty(){
-    return root.isSentinel();
+    return root->isSentinel();
 }
 
 void RedBlackTree::insert(int num){
     preserveTreeProperties(insertInitial(root, num));
 }
 
-void RedBlackTree::preserveTreeProperties(Node *& inserted){
+void RedBlackTree::preserveTreeProperties(Node * inserted){
     if(inserted->parent == 0){//inserted is the root
         inserted->black = true;
+        return;
     }
     else if(!inserted->parent->black){//Otherwise tree is still valid.
         
@@ -98,17 +99,17 @@ void RedBlackTree::print(){
 Node* RedBlackTree::insertInitial(Node *& child, int num){
     //Initial insertion as in binary search tree; node colored red.
     //Returns pointer to inserted node. Assigns parent and child pointers.
-    if(child.isSentinel()){
+    if(child->isSentinel()){
         child->value = num;
-        childe->black = false;
-        child.addSentinelLeafs();
+        child->black = false;
+        child->addSentinelLeafs();
         return child;
     }
     if(num < child->value){
-        return insertPrivate(child->left, num);
+        return insertInitial(child->left, num);
     }
     else{
-        return insertPrivate(child->right, num);
+        return insertInitial(child->right, num);
     }
 }
 

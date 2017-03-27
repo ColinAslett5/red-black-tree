@@ -73,7 +73,7 @@ class RedBlackTree{
   private:
     Node* root;
     Node* insertInitial(Node *& node, int num);
-    void preserveTreeProperties(Node *& inserted);
+    void preserveTreeProperties(Node * inserted);
     int getNumLevels(Node* root, int level);
     void populateArray(int *& array, int index, Node* node);
     //Node** find(Node *& node, int num);
