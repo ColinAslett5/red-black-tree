@@ -23,6 +23,15 @@ struct Node{
    */
     return left == 0 && right == 0;
   }
+  bool isRed(){
+    return !black;
+  }
+  void paintBlack(){
+    black = true;
+  }
+  void paintRed(){
+    black = false;
+  }
   void addSentinelLeafs(){
     setLeft(new Node());
     setRight(new Node());
@@ -48,6 +57,13 @@ struct Node{
     if(node!=0){
       node->parent = this;
     }
+  }
+  bool isLeftChild(){
+    //Parent shouldn't be null if calling this.
+    return parent->left == this;
+  }
+  bool isRightChild(){
+    return parent->right == this;
   }
   void deleteSubtrees(){
     if(left!=0){

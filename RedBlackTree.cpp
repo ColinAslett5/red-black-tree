@@ -24,11 +24,17 @@ void RedBlackTree::insert(int num){
 
 void RedBlackTree::preserveTreeProperties(Node * inserted){
     if(inserted->parent == 0){//inserted is the root
-        inserted->black = true;
+        inserted->paintRed();
         return;
     }
-    else if(!inserted->parent->black){//Otherwise tree is still valid.
-        
+    else if(inserted->parent->black){//tree is still valid.
+        return;
+    }
+    else if(inserted->uncle()->isRed()){//Both parent and uncle are red
+        inserted->parent->paintBlack();
+        inserted->uncle()->paintBlack();
+        inserted->grandparent()->paintRed();
+        preserveTreeProperties(inserted->grandparent());
     }
 }
 
@@ -81,7 +87,7 @@ void RedBlackTree::print(){
         //Nodes:
         for(int n=0; n < pow(2, l-1); n++){
             if(nodes[index]!=0){
-                cout << nodes[index];
+                cout << nodes[index] << (nodes[index]->black ? 'B' : 'R');
             }
             else{
                 cout << ' ';
@@ -101,7 +107,7 @@ Node* RedBlackTree::insertInitial(Node *& child, int num){
     //Returns pointer to inserted node. Assigns parent and child pointers.
     if(child->isSentinel()){
         child->value = num;
-        child->black = false;
+        child->paintRed();
         child->addSentinelLeafs();
         return child;
     }
