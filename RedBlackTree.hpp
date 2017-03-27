@@ -88,10 +88,13 @@ class RedBlackTree{
     void print();
   private:
     Node* root;
-    Node* insertInitial(Node *& node, int num);
+    Node* insertInitial(Node * node, int num);
     void preserveTreeProperties(Node * inserted);
     int getNumLevels(Node* root, int level);
     void populateArray(int *& array, int index, Node* node);
     //Node** find(Node *& node, int num);
     //void removeNode(Node** toRemove);
+    void leftRotation(Node* formerChild);
+    void rightRotation(Node* formerChild);
+    Node** parentPtrTo(Node* child);
 };

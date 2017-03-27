@@ -23,8 +23,9 @@ void RedBlackTree::insert(int num){
 }
 
 void RedBlackTree::preserveTreeProperties(Node * inserted){
+    //Based on the description of the algorithm on Wikipedia's Red-black tree page.
     if(inserted->parent == 0){//inserted is the root
-        inserted->paintRed();
+        inserted->paintBlack();
         return;
     }
     else if(inserted->parent->black){//tree is still valid.
@@ -35,6 +36,31 @@ void RedBlackTree::preserveTreeProperties(Node * inserted){
         inserted->uncle()->paintBlack();
         inserted->grandparent()->paintRed();
         preserveTreeProperties(inserted->grandparent());
+        return;
+    }
+    if(inserted->isRightChild() && inserted->parent->isLeftChild()){
+        //Parent is red, uncle is black. Inserted is right child of parent,
+        //parent is left child of grandparent.
+        //Left rotation: move the inserted node into its parent's position:
+        leftRotation(inserted);
+        inserted = inserted->left;
+        //Do not return.
+    }
+    else if(inserted->isLeftChild() && inserted->parent->isRightChild()){
+        //"Reflection" of previous "zig-zag" case.
+        rightRotation(inserted);
+        inserted = inserted->right;
+        //Again, do not return; what we're doing is getting rid
+        //of the zig-zag by rotating for the next case if there is one;
+        //we haven't taken care of preserving the tree property yet.
+    }
+    inserted->grandparent()->paintRed();
+    inserted->parent->paintBlack();
+    if(inserted->isLeftChild()){
+        leftRotation(inserted->parent);
+    }
+    else{
+        rightRotation(inserted->parent);
     }
 }
 
@@ -87,7 +113,7 @@ void RedBlackTree::print(){
         //Nodes:
         for(int n=0; n < pow(2, l-1); n++){
             if(nodes[index]!=0){
-                cout << nodes[index] << (nodes[index]->black ? 'B' : 'R');
+                cout << nodes[index];
             }
             else{
                 cout << ' ';
@@ -102,9 +128,9 @@ void RedBlackTree::print(){
     }
 }
 
-Node* RedBlackTree::insertInitial(Node *& child, int num){
+Node* RedBlackTree::insertInitial(Node * child, int num){
     //Initial insertion as in binary search tree; node colored red.
-    //Returns pointer to inserted node. Assigns parent and child pointers.
+    //Assigns parent and child pointers. Returns pointer to inserted node.
     if(child->isSentinel()){
         child->value = num;
         child->paintRed();
@@ -152,3 +178,33 @@ void RedBlackTree::populateArray(int *& array, int index, Node* node){
         return find(node->left, num);
     }
 }*/
+
+void RedBlackTree::leftRotation(Node* formerChild){
+    Node* formerParent = formerChild->parent;
+    *parentPtrTo(formerParent) = formerChild;
+    formerChild->parent = formerChild->grandparent();
+    formerParent->setRight(formerChild->left);
+    formerChild->setLeft(formerParent);
+}
+
+void RedBlackTree::rightRotation(Node* formerChild){
+    Node* formerParent = formerChild->parent;
+    *parentPtrTo(formerParent) = formerChild;
+    formerChild->parent = formerChild->grandparent();
+    formerParent->setLeft(formerChild->right);
+    formerChild->setRight(formerParent);
+}
+
+Node** RedBlackTree::parentPtrTo(Node* child){
+    Node** ptr;
+    if(child->parent == 0){
+        ptr = &root;
+    }
+    else if(child == child->parent->left){
+        ptr = &(child->parent->left);
+    }
+    else{
+        ptr = &(child->parent->right);
+    }
+    return ptr;
+}
