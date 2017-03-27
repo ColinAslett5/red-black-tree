@@ -23,6 +23,20 @@ struct Node{
    */
     return left == 0 && right == 0;
   }
+  void addSentinelLeafs(){
+    setLeft(new Node());
+    setRight(new Node());
+  }
+  Node* grandparent(){
+    return parent == 0 ? 0 : parent->parent;
+  }
+  Node* uncle(){
+    Node* gp = grandparent();
+    if(gp == 0){
+      return 0;
+    }
+    return gp->left == parent ? gp->right : gp->left;
+  }
   void setLeft(Node* node){
     left = node;
     if(node!=0){
@@ -58,7 +72,8 @@ class RedBlackTree{
     void print();
   private:
     Node* root;
-    //void insertPrivate(Node *& parent, int num);
+    Node* insertInitial(Node *& node, int num);
+    void preserveTreeProperties(Node *& inserted);
     int getNumLevels(Node* root, int level);
     void populateArray(int *& array, int index, Node* node);
     //Node** find(Node *& node, int num);

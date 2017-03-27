@@ -5,8 +5,8 @@
 
 using namespace std;
 
-RedBlackTree::RedBlackTree() : root(0){
-    
+RedBlackTree::RedBlackTree(){
+    root = new Node();
 }
 
 RedBlackTree::~RedBlackTree(){
@@ -15,16 +15,21 @@ RedBlackTree::~RedBlackTree(){
 }
 
 bool RedBlackTree::isEmpty(){
-    return root == NULL;
+    return root.isSentinel();
 }
 
-/*void RedBlackTree::insert(int num){
-    if(root == 0){
-        root = new Node(num);
-        return;
+void RedBlackTree::insert(int num){
+    preserveTreeProperties(insertInitial(root, num));
+}
+
+void RedBlackTree::preserveTreeProperties(Node *& inserted){
+    if(inserted->parent == 0){//inserted is the root
+        inserted->black = true;
     }
-    insertPrivate(root, num);
-}*/
+    else if(!inserted->parent->black){//Otherwise tree is still valid.
+        
+    }
+}
 
 /*bool RedBlackTree::remove(int num){
     Node** toRemove = find(root, num);
@@ -90,18 +95,22 @@ void RedBlackTree::print(){
     }
 }
 
-/*void RedBlackTree::insertPrivate(Node *& parent, int num){
-    if(parent == 0){
-        parent = new Node(num);
-        return;
+Node* RedBlackTree::insertInitial(Node *& child, int num){
+    //Initial insertion as in binary search tree; node colored red.
+    //Returns pointer to inserted node. Assigns parent and child pointers.
+    if(child.isSentinel()){
+        child->value = num;
+        childe->black = false;
+        child.addSentinelLeafs();
+        return child;
     }
-    if(num < parent->value){
-        insertPrivate(parent->left, num);
+    if(num < child->value){
+        return insertPrivate(child->left, num);
     }
     else{
-        insertPrivate(parent->right, num);
+        return insertPrivate(child->right, num);
     }
-}*/
+}
 
 int RedBlackTree::getNumLevels(Node* root, int level = 0){
     if(root == 0){
