@@ -57,10 +57,10 @@ void RedBlackTree::preserveTreeProperties(Node * inserted){
     inserted->grandparent()->paintRed();
     inserted->parent->paintBlack();
     if(inserted->isLeftChild()){
-        leftRotation(inserted->parent);
+        rightRotation(inserted->parent);
     }
     else{
-        rightRotation(inserted->parent);
+        leftRotation(inserted->parent);
     }
 }
 
@@ -112,8 +112,11 @@ void RedBlackTree::print(){
         }
         //Nodes:
         for(int n=0; n < pow(2, l-1); n++){
-            if(nodes[index]!=0){
-                cout << nodes[index];
+            if(nodes[index] > 0){
+                cout << nodes[index] << 'B';
+            }
+            else if(nodes[index] < 0){
+                cout << -nodes[index] << 'R';
             }
             else{
                 cout << ' ';
@@ -145,18 +148,18 @@ Node* RedBlackTree::insertInitial(Node * child, int num){
     }
 }
 
-int RedBlackTree::getNumLevels(Node* root, int level = 0){
-    if(root == 0){
+int RedBlackTree::getNumLevels(Node* currentRoot, int level = 0){
+    if(currentRoot == 0){
         return level;
     }
-    return max(getNumLevels(root->left, level + 1), getNumLevels(root->right, level + 1));
+    return max(getNumLevels(currentRoot->left, level + 1), getNumLevels(currentRoot->right, level + 1));
 }
 
 void RedBlackTree::populateArray(int *& array, int index, Node* node){
     if(node == 0){
         return;
     }
-    array[index] = node->value;
+    array[index] = node->black ? node->value : -node->value;
     populateArray(array, index*2+1, node->left);
     populateArray(array, index*2+2, node->right);
 }
