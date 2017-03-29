@@ -64,37 +64,6 @@ void RedBlackTree::preserveTreeProperties(Node * inserted){
     }
 }
 
-/*bool RedBlackTree::remove(int num){
-    Node** toRemove = find(root, num);
-    if(toRemove == 0){//Node not found
-        return false;
-    }
-    else{
-        removeNode(toRemove);
-        return true;
-    }
-}*/
-
-/*void RedBlackTree::removeNode(Node** toRemove){
-    if((*toRemove)->left == 0 && (*toRemove)->right == 0){//No children
-        delete *toRemove;
-        *toRemove = 0;
-    }
-    else if((*toRemove)->left != 0 && (*toRemove)->right != 0){//2 Children
-        Node** nextLargest = &((*toRemove)->right);
-        while((*nextLargest)->left != 0){
-            nextLargest = &((*nextLargest)->left);
-        }
-        (*toRemove)->value = (*nextLargest)->value;
-        removeNode(nextLargest);
-    }
-    else{//1 child
-        Node* child = (*toRemove)->left == 0 ? (*toRemove)->right : (*toRemove)->left;
-        delete *toRemove;
-        *toRemove = child;
-    }
-}*/
-
 void RedBlackTree::print(){
     int numLevels = getNumLevels(root, 0);
     //I'll use the same algorithm I developed for the heap, converting the data
@@ -163,24 +132,6 @@ void RedBlackTree::populateArray(int *& array, int index, Node* node){
     populateArray(array, index*2+1, node->left);
     populateArray(array, index*2+2, node->right);
 }
-
-/*Node** RedBlackTree::find(Node *& node, int num){
-    //Returns pointer to the (parent) pointer to the
-    //first node with value == num.
-    if(node == 0){
-        return 0;
-    }
-    if(node->value == num){
-        Node** ptr = &node;
-        return ptr;
-    }
-    else if(node->value < num){
-        return find(node->right, num);
-    }
-    else{
-        return find(node->left, num);
-    }
-}*/
 
 void RedBlackTree::leftRotation(Node* formerChild){
     Node* formerParent = formerChild->parent;
